@@ -7,6 +7,13 @@ import crypto from "crypto";
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [signUpState, setSignUpState] = useState(false);
+
+  const signUpStateHandler = (object: { [key: string]: string }) => {
+    if (object["message"] === "User created successfully") {
+      setSignUpState(true);
+    }
+  }
 
   const pwordComplexityVerification = (password: string) => {
     // Example: Check if password is at least 8 characters long
@@ -39,11 +46,12 @@ export default function Home() {
     formData.set("system_date", new Date().toISOString());
 
     try {
-      const response = await fetch("http://localhost/TEST_DB_API/api.php", {
+      const response = await fetch("http://localhost/TEST_API/api.php", {
         method: "POST",
         body: formData,
     });
     const result = await response.json();
+    signUpStateHandler(result);
     console.log(result);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -115,6 +123,9 @@ export default function Home() {
             <input type="hidden" id="system_date" name="system_date" />
           </div>
         </form>
+        <div className="text-sm text-gray-500" >
+          {signUpState && <h1>User created successfully!</h1>}
+        </div>
       </main>
     </div>
   );
