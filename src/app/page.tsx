@@ -32,12 +32,15 @@ export default function Home() {
     return { salt, hash };
   }
 
-
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const systemDateInput = document.getElementById("system_date") as HTMLInputElement;
+    systemDateInput.value = new Date().toISOString();
+  }
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <form method="POST" action="http://localhost/TEST_DB_API/api.php">
+        <form method="POST" action="http://localhost/TEST_DB_API/api.php" onSubmit={ handleSubmit }>
           <div className="text-left items-left justify-left">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -71,11 +74,11 @@ export default function Home() {
                 name="password"
                 id="password"
                 autoComplete="current-password"
-                onChange={handlePasswordChange}
+                onChange={ handlePasswordChange }
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring"></input>
               <button
                 type="button"
-                onClick={togglePasswordVisibility}
+                onClick={ togglePasswordVisibility }
                 className="text-sm text-gray-500 hover:text-gray-700 focus:outline-none">
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -96,6 +99,7 @@ export default function Home() {
                 Submit
               </button>
             </div>
+            <input type="hidden" id="system_date" name="system_date" />
           </div>
         </form>
       </main>
