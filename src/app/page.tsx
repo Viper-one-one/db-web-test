@@ -32,15 +32,28 @@ export default function Home() {
     return { salt, hash };
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const systemDateInput = document.getElementById("system_date") as HTMLInputElement;
-    systemDateInput.value = new Date().toISOString();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    formData.set("system_date", new Date().toISOString());
+
+    try {
+      const response = await fetch("http://localhost/TEST_DB_API/api.php", {
+        method: "POST",
+        body: formData,
+    });
+    const result = await response.json();
+    console.log(result);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   }
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <form method="POST" action="http://localhost/TEST_DB_API/api.php" onSubmit={ handleSubmit }>
+        <form onSubmit={ handleSubmit }>
           <div className="text-left items-left justify-left">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
