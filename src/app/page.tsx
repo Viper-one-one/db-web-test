@@ -1,6 +1,8 @@
 "use client";
 
+import { promisify } from "util";
 import { useEffect, useState } from "react";
+import crypto from "crypto";
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,10 +24,20 @@ export default function Home() {
     setPassword(event.target.value);
   }
 
+  // TODO: Implement password hashing and salting
+  // unused
+  const hashPassword = (password: string) => {
+    const salt = crypto.randomBytes(16).toString('base64');
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 512, 'sha512').toString('base64');
+    return { salt, hash };
+  }
+
+
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <form>
+        <form method="POST" action="http://localhost/TEST_DB_API/api.php">
           <div className="text-left items-left justify-left">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -77,7 +89,9 @@ export default function Home() {
             </div>
             <div className="flex items-center justify-between mt-4">
               <button
+                name="submit"
                 type="submit"
+                value={"Submit"}
                 className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Submit
               </button>
